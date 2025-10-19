@@ -10,6 +10,7 @@ import {
   SignUpButton,
 } from "@clerk/nextjs";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner"
 import { Button } from "@/components/ui/button";
 import UserDropdown from "@/components/user-dropdown";
 
@@ -57,6 +58,7 @@ export default function RootLayout({
             </div>
           </nav>
           {children}
+          <Toaster richColors />
         </body>
       </html>
     </ClerkProvider>
