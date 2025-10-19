@@ -2,8 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
 import { ChartColumnBigIcon } from "lucide-react";
-import { ClerkProvider, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+} from "@clerk/nextjs";
 import "./globals.css";
+import { Button } from "@/components/ui/button";
+import UserDropdown from "@/components/user-dropdown";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -35,10 +43,17 @@ export default function RootLayout({
             <div>
               <SignedOut>
                 <div className="flex items-center">
-                  <SignInButton />
-                  <SignUpButton />
+                  <Button asChild variant={"link"} className="text-white">
+                    <SignInButton />
+                  </Button>
+                  <Button asChild variant={"link"} className="text-white">
+                    <SignUpButton />
+                  </Button>
                 </div>
               </SignedOut>
+              <SignedIn>
+                <UserDropdown />
+              </SignedIn>
             </div>
           </nav>
           {children}
