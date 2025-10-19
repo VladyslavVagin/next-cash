@@ -25,8 +25,9 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { format } from "date-fns";
 import { Input } from "./ui/input";
+import type { Category } from "@/types/Category";
 
-const TransactionForm = () => {
+const TransactionForm = ({ categories, onSubmit }: { categories: Category[], onSubmit: (data: z.input<typeof transactionFormSchema>) => Promise<void>}) => {
   const form = useForm<z.input<typeof transactionFormSchema>>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
@@ -40,7 +41,12 @@ const TransactionForm = () => {
 
   const handleSubmit = async (
     data: z.input<typeof transactionFormSchema>
-  ) => {};
+  ) => { await onSubmit(data); };
+
+  const transactionType = form.watch("transactionType");
+  const fileteredCategories = categories.filter(
+    (category) => category.type === transactionType
+  );
 
   return (
     <Form {...form}>
@@ -54,7 +60,13 @@ const TransactionForm = () => {
                 <FormItem>
                   <FormLabel>Transaction Type</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={(newValue) => {
+                        field.onChange(newValue);
+                        form.setValue("categoryId", 0);
+                      }}
+                      value={field.value}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
@@ -84,7 +96,16 @@ const TransactionForm = () => {
                       <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent></SelectContent>
+                      <SelectContent>
+                        {fileteredCategories.map((category) => (
+                          <SelectItem
+                            key={category.id}
+                            value={String(category.id)}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -108,7 +129,7 @@ const TransactionForm = () => {
                           className="data-[empty=true]:text-muted-foreground justify-start text-left font-normal"
                         >
                           <CalendarIcon />
-                          {field.value && typeof field.value === 'string' ? (
+                          {field.value && typeof field.value === "string" ? (
                             format(new Date(field.value), "PPP")
                           ) : (
                             <span>Pick a date</span>
@@ -116,14 +137,20 @@ const TransactionForm = () => {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
-                         <Calendar
-                           mode="single"
-                           selected={field.value && typeof field.value === 'string' ? new Date(field.value) : undefined}
-                           onSelect={(date) => field.onChange(date?.toISOString())}
-                           disabled={{
+                        <Calendar
+                          mode="single"
+                          selected={
+                            field.value && typeof field.value === "string"
+                              ? new Date(field.value)
+                              : undefined
+                          }
+                          onSelect={(date) =>
+                            field.onChange(date?.toISOString())
+                          }
+                          disabled={{
                             after: new Date(),
-                           }}
-                         />
+                          }}
+                        />
                       </PopoverContent>
                     </Popover>
                   </FormControl>
@@ -132,7 +159,7 @@ const TransactionForm = () => {
               );
             }}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="amount"
             render={({ field }) => {
@@ -140,7 +167,11 @@ const TransactionForm = () => {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input {...field} value={field.value as number} type="number"/>
+                    <Input
+                      {...field}
+                      value={field.value as number}
+                      type="number"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -149,7 +180,7 @@ const TransactionForm = () => {
           />
         </fieldset>
         <fieldset className="mt-5 flex flex-col gap-y-5">
-        <FormField
+          <FormField
             control={form.control}
             name="description"
             render={({ field }) => {
@@ -157,14 +188,16 @@ const TransactionForm = () => {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input {...field} value={String(field.value)}/>
+                    <Input {...field} value={String(field.value)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               );
             }}
           />
-          <Button type="submit" className="w-full">Add Transaction</Button>
+          <Button type="submit" className="w-full">
+            Add Transaction
+          </Button>
         </fieldset>
       </form>
     </Form>
