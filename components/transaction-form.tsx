@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { transactionFormSchema } from "@/schemas/transactionFormSchema";
+import { useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -30,17 +31,34 @@ import type { Category } from "@/types/Category";
 type Props = {
   categories: Category[];
   onSubmit: (data: z.input<typeof transactionFormSchema>) => Promise<void>;
+  defaultValues?: {
+    amount: number;
+    categoryId: number;
+    description: string;
+    transactionDate: Date;
+    transactionType: "income" | "expense";
+  }
 }
 
-const TransactionForm = ({ categories, onSubmit }: Props) => {
+const TransactionForm = ({ categories, onSubmit, defaultValues }: Props) => {
+  console.log("TransactionForm - defaultValues:", defaultValues);
+  console.log("TransactionForm - categories:", categories);
+  console.log("TransactionForm component is rendering!");
+  
   const form = useForm<z.input<typeof transactionFormSchema>>({
     resolver: zodResolver(transactionFormSchema),
-    defaultValues: {
+    defaultValues: defaultValues ? {
+      amount: defaultValues.amount.toString(),
+      categoryId: defaultValues.categoryId.toString(),
+      description: defaultValues.description,
+      transactionDate: defaultValues.transactionDate.toISOString(),
+      transactionType: defaultValues.transactionType,
+    } : {
       amount: "0",
       categoryId: "0",
       description: "",
       transactionDate: new Date().toISOString(),
-      transactionType: "income" as const,
+      transactionType: "income",
     },
   });
 
@@ -170,7 +188,7 @@ const TransactionForm = ({ categories, onSubmit }: Props) => {
                   <FormControl>
                     <Input
                       {...field}
-                      value={field.value as number}
+                      value={String(field.value || "")}
                       type="number"
                     />
                   </FormControl>
@@ -189,7 +207,7 @@ const TransactionForm = ({ categories, onSubmit }: Props) => {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input {...field} value={String(field.value)} />
+                    <Input {...field} value={field.value || ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -197,7 +215,7 @@ const TransactionForm = ({ categories, onSubmit }: Props) => {
             }}
           />
           <Button type="submit" className="w-full">
-            Add Transaction
+            {defaultValues ? "Update Transaction" : "Add Transaction"}
           </Button>
         </fieldset>
       </form>
