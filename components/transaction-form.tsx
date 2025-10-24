@@ -41,10 +41,6 @@ type Props = {
 }
 
 const TransactionForm = ({ categories, onSubmit, defaultValues }: Props) => {
-  console.log("TransactionForm - defaultValues:", defaultValues);
-  console.log("TransactionForm - categories:", categories);
-  console.log("TransactionForm component is rendering!");
-  
   const form = useForm<z.input<typeof transactionFormSchema>>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: defaultValues ? {

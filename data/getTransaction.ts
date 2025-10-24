@@ -6,11 +6,8 @@ import "server-only";
 
 export const getTransaction = async (transactionId: number) => {
   const { userId } = await auth();
-  console.log("getTransaction - userId:", userId);
-  console.log("getTransaction - transactionId:", transactionId);
   
   if (!userId) {
-    console.log("getTransaction - No userId, returning null");
     return null;
   }
 
@@ -24,6 +21,5 @@ export const getTransaction = async (transactionId: number) => {
       )
     );
 
-  console.log("getTransaction - Found transaction:", transaction);
   return transaction;
 };
