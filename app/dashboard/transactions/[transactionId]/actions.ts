@@ -38,5 +38,14 @@ export const updateTransaction = async (data: Props) => {
         transactionDate: data.transactionDate,
         categoryId: data.categoryId,
     }).where(and(eq(transactionsTable.id, data.id), eq(transactionsTable.userId, userId)))
+}
 
+export const deleteTransaction = async (transactionId: number) => {
+    const { userId } = await auth();
+    if (!userId) return {
+        error: true,
+        message: "Unauthorized",
+    }
+
+    await db.delete(transactionsTable).where(and(eq(transactionsTable.id, transactionId), eq(transactionsTable.userId, userId)));
 }
