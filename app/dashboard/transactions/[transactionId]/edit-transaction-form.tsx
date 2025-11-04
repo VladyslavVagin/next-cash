@@ -6,7 +6,6 @@ import type { Category } from "@/types/Category";
 import { toast } from "sonner";
 import z from "zod";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { updateTransaction } from "./actions";
 import { format } from "date-fns";
 
@@ -22,7 +21,7 @@ type Props = {
 };
 
 const EditTransactionForm = ({ categories, transaction }: Props) => {
-  const router: any = useRouter();
+  const router: ReturnType<typeof useRouter> = useRouter();
 
   const handleSubmit = async (data: z.input<typeof transactionFormSchema>) => {
     const result = await updateTransaction({

@@ -34,7 +34,7 @@ const RecentTransactions = async () => {
       <CardContent>
         {!transactions?.length && (
           <p className="text-center py-10 text-lg text-muted-foreground">
-            You don't have any transactions yet. Start adding your first transaction.
+            You don&apos;t have any transactions yet. Start adding your first transaction.
           </p>
         )}
         {!!transactions?.length && (
