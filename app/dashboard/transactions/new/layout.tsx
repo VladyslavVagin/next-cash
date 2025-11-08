@@ -11,7 +11,7 @@ import {
 
   const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
-      <div className="max-w-screen-xl mx-auto py-10">
+      <div className="max-w-screen-xl mx-auto py-10 px-2">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>

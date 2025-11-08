@@ -8,7 +8,7 @@ const DashboardPage = async ({ searchParams }: { searchParams: Promise<{ cfyear?
     cfYear = new Date().getFullYear();
   }
   return (
-   <div className="max-w-screen-xl mx-auto py-5">
+   <div className="max-w-screen-xl mx-auto py-5 px-2">
      <h1 className="text-4xl font-semibold pb-5">Dashboard</h1>
      <Cashflow year={cfYear} />
      <RecentTransactions />
